@@ -1,0 +1,485 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Ecommerce backend by Santiago Daniel Morelli",
+        "description": "Proyecto final del curso de Programacion Backend de CODERHOUSE"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "tags": [{
+        "name": "Productos"
+    }, {
+        "name": "Usuarios"
+    }, {
+        "name": "Carrito"
+    }, {
+        "name": "Chat BOT"
+    }],
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/productos/": {
+            "get": {
+                "tags": ["Productos"],
+                "description": "Lista completa de productos / SOLO USUARIOS LOGUEADOS",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "JSON Array con todos los productos"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Productos"],
+                "description": "Crea un producto nuevo / SOLO ADMINS",
+                "parameters": [{
+                    "type": "object",
+                    "in": "body",
+                    "schema": {
+                        "$ref": "#/components/schemas/NewProducto"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Producto agregado en JSON"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/productos/{id}": {
+            "get": {
+                "tags": ["Productos"],
+                "description": "Buscqueda de un producto especifico / SOLO USUARIOS LOGUEADOS",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "JSON DEL producto encontrado",
+                        "schema": {
+                            "$ref": "#/definitions/Product"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Productos"],
+                "description": "Actualizacion de un producto / SOLO ADMINS",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }, {
+                    "type": "object",
+                    "in": "body",
+                    "schema": {
+                        "$ref": "#/components/schemas/NewProducto"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "JSON DEL producto actualizado",
+                        "schema": {
+                            "$ref": "#/definitions/Product"
+                        },
+                        "401": {
+                            "description": "Unauthorized"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Productos"],
+                "description": "Borrado de un producto especifico / SOLO ADMINS",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Producto borrado"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/carrito/": {
+            "get": {
+                "tags": ["Carrito"],
+                "description": "Devuelve JSON del carrito del usuario logueado",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "JSON del carrito"
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Carrito"],
+                "description": "Añade producto al carrito del usuario logueado",
+                "parameters": [{
+                    "name": "id",
+                    "in": "body",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": "Producto añadido al carrito"
+                }
+            },
+            "delete": {
+                "tags": ["Carrito"],
+                "description": "Borrado del producto deseado del carrito",
+                "parameters": [{
+                    "name": "id",
+                    "in": "body",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": "Producto borrado del carrito"
+                }
+            }
+        },
+        "/carrito/buy": {
+            "post": {
+                "tags": ["Carrito"],
+                "description": "Enviar orden de compra",
+                "parameters": [],
+                "responses": {
+                    "200": "Orden de compra enviada"
+                }
+            }
+        },
+        "/chat/": {
+            "get": {
+                "tags": ["Chat BOT"],
+                "description": "ORDEN - ordenes de compra realizadas por el usuario // STOCK (ID) - stock del producto // CARRITO - carrito del usuario",
+                "parameters": [],
+                "responses": {}
+            }
+        },
+        "/users/{id?}": {
+            "get": {
+                "tags": ["Usuarios"],
+                "description": "Obtener un usuario ingresando o todos los usuarios / SOLO ADMINS",
+                "parameters": [{
+                    "name": "id?",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "JSON Array con todos los usuarios o un usuario especifico",
+                        "schema": {
+                            "$ref": "#/definitions/Usuarios"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "put": {
+                "tags": ["Usuarios"],
+                "description": "Actualizar datos de un usuario / SOLO ADMINS",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }, {
+                    "type": "object",
+                    "in": "body",
+                    "schema": {
+                        "$ref": "#/components/schemas/NewUsuario"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "JSON del usuario actualizado",
+                        "schema": {
+                            "$ref": "#/definitions/Usuario"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Usuarios"],
+                "description": "Borrado de un usuario / SOLO ADMINS",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Usuario borrado"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/users/login": {
+            "post": {
+                "tags": ["Usuarios"],
+                "description": "Inicio de sesion(Passport-Local)",
+                "parameters": [{
+                    "name": "username",
+                    "in": "body",
+                    "required": true,
+                    "type": "string"
+                }, {
+                    "name": "password",
+                    "in": "body",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Usuario"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/logout": {
+            "post": {
+                "tags": ["Usuarios"],
+                "description": "Logout automatico",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/users/signup": {
+            "post": {
+                "tags": ["Usuarios"],
+                "description": "Crear un nuevo usuario",
+                "parameters": [{
+                    "type": "object",
+                    "in": "body",
+                    "schema": {
+                        "$ref": "#/components/schemas/NewUsuario"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Usuario"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/info/": {
+            "get": {
+                "description": "Info de sistema",
+                "parameters": [],
+                "responses": {}
+            }
+        }
+    },
+    "definitions": {
+        "Product": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string",
+                    "example": "122mfsa344kañg4"
+                },
+                "nombre": {
+                    "type": "string",
+                    "example": "Botella"
+                },
+                "precio": {
+                    "type": "number",
+                    "example": 34.42
+                },
+                "stock": {
+                    "type": "number",
+                    "example": 342
+                },
+                "codigo": {
+                    "type": "number",
+                    "example": 1234
+                },
+                "descripcion": {
+                    "type": "string",
+                    "example": "Recipiente"
+                },
+                "thumbnail": {
+                    "type": "string",
+                    "example": "foto"
+                }
+            }
+        },
+        "Usuario": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string",
+                    "example": "12as2324gkgk23"
+                },
+                "firstName": {
+                    "type": "string",
+                    "example": "Sonia"
+                },
+                "lastName": {
+                    "type": "string",
+                    "example": "Morelli"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "sonia@email.com"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "soniamorelli"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "adress": {
+                    "type": "string",
+                    "example": "aguado 1234"
+                },
+                "age": {
+                    "type": "number",
+                    "example": "34"
+                },
+                "phone": {
+                    "type": "number",
+                    "example": "2232121212"
+                },
+                "avatar": {
+                    "type": "string"
+                },
+                "admin": {
+                    "type": "boolean"
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "NewProducto": {
+                "type": "object",
+                "properties": {
+                    "nombre": {
+                        "type": "string",
+                        "example": "Botella"
+                    },
+                    "precio": {
+                        "type": "number",
+                        "example": 34.42
+                    },
+                    "stock": {
+                        "type": "number",
+                        "example": 342
+                    },
+                    "codigo": {
+                        "type": "number",
+                        "example": 1234
+                    },
+                    "descripcion": {
+                        "type": "string",
+                        "example": "Recipiente"
+                    },
+                    "thumbnail": {
+                        "type": "string",
+                        "example": "foto"
+                    }
+                }
+            },
+            "NewUsuario": {
+                "type": "object",
+                "properties": {
+                    "firstName": {
+                        "type": "string",
+                        "example": "Sonia"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "example": "Morelli"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "sonia@email.com"
+                    },
+                    "username": {
+                        "type": "string",
+                        "example": "sonimoreli"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "adress": {
+                        "type": "string",
+                        "example": "aguado 1234"
+                    },
+                    "age": {
+                        "type": "number",
+                        "example": "34"
+                    },
+                    "phone": {
+                        "type": "number",
+                        "example": "2232121212"
+                    },
+                    "avatar": {
+                        "type": "string"
+                    },
+                    "admin": {
+                        "type": "boolean"
+                    }
+                }
+            }
+        }
+    }
+}
